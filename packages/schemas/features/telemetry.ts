@@ -37,6 +37,18 @@ const userCreatedEventSchema = userEvent.merge(
   })
 )
 
+const userUpdatedEventSchema = userEvent.merge(
+  z.object({
+    name: z.literal('User updated'),
+    data: z.object({
+      name: z.string().optional(),
+      onboardingCategories: z.array(z.string()).optional(),
+      referral: z.string().optional(),
+      company: z.string().optional(),
+    }),
+  })
+)
+
 const typebotCreatedEventSchema = typebotEvent.merge(
   z.object({
     name: z.literal('Typebot created'),
@@ -54,6 +66,21 @@ const publishedTypebotEventSchema = typebotEvent.merge(
       name: z.string(),
       isFirstPublish: z.literal(true).optional(),
     }),
+  })
+)
+
+const customDomainAddedEventSchema = workspaceEvent.merge(
+  z.object({
+    name: z.literal('Custom domain added'),
+    data: z.object({
+      domain: z.string(),
+    }),
+  })
+)
+
+const whatsAppCredentialsCreatedEventSchema = workspaceEvent.merge(
+  z.object({
+    name: z.literal('WhatsApp credentials created'),
   })
 )
 
@@ -129,6 +156,9 @@ export const eventSchema = z.discriminatedUnion('name', [
   subscriptionAutoUpdatedEventSchema,
   workspacePastDueEventSchema,
   workspaceNotPastDueEventSchema,
+  userUpdatedEventSchema,
+  customDomainAddedEventSchema,
+  whatsAppCredentialsCreatedEventSchema,
 ])
 
 export type TelemetryEvent = z.infer<typeof eventSchema>
